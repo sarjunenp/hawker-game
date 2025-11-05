@@ -1,0 +1,77 @@
+/* WalletBadge.css */
+
+.wallet-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-left: 20px;
+  }
+  
+  .wallet-badge:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .wallet-icon {
+    font-size: 20px;
+    animation: coinSpin 3s ease-in-out infinite;
+  }
+  
+  @keyframes coinSpin {
+    0%, 100% {
+      transform: rotateY(0deg);
+    }
+    50% {
+      transform: rotateY(180deg);
+    }
+  }
+  
+  .wallet-points {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    min-width: 40px;
+    text-align: right;
+  }
+  
+  /* Mobile responsive */
+  @media (max-width: 768px) {
+    .wallet-badge {
+      padding: 6px 12px;
+      gap: 4px;
+    }
+    
+    .wallet-icon {
+      font-size: 18px;
+    }
+    
+    .wallet-points {
+      font-size: 14px;
+    }
+  }
+  
+  /* Pulse animation when points increase */
+  @keyframes pointsIncrease {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+      color: #ffd700;
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  .wallet-badge.points-increased {
+    animation: pointsIncrease 0.5s ease;
+  }

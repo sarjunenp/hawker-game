@@ -1,0 +1,6 @@
+# AWS SDK for Python
+boto3==1.26.137
+botocore==1.29.137
+
+# Geospatial calculations (for map distance features)
+geopy==2.3.0

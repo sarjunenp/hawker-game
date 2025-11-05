@@ -1,0 +1,622 @@
+/* Wallet.css - Mobile Optimized */
+
+.wallet-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Loading */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  color: #fff;
+}
+
+.loading-spinner {
+  font-size: 4em;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading p {
+  font-size: 1.2em;
+  margin-top: 20px;
+}
+
+/* Header */
+.wallet-header {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-4px);
+}
+
+.wallet-title {
+  font-size: 2.5em;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Balance Card */
+.balance-card {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.balance-icon {
+  font-size: 5em;
+  line-height: 1;
+  animation: coinFloat 3s ease-in-out infinite;
+}
+
+@keyframes coinFloat {
+  0%, 100% { 
+    transform: translateY(0px);
+  }
+  50% { 
+    transform: translateY(-10px);
+  }
+}
+
+.balance-info {
+  flex: 1;
+  text-align: center;
+}
+
+.balance-label {
+  font-size: 1em;
+  color: #64748b;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.balance-amount {
+  font-size: 3.5em;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Tabs */
+.tabs {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  display: flex;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  border-radius: 16px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  flex: 1;
+  min-width: 150px;
+  padding: 15px 20px;
+  font-size: 1em;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tab.active {
+  color: #1e293b;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Tab Content */
+.tab-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  min-height: 400px;
+}
+
+.section-title {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 25px 0;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 5em;
+  margin-bottom: 20px;
+}
+
+.empty-text {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #64748b;
+  margin: 0 0 10px 0;
+}
+
+.empty-subtext {
+  font-size: 1.1em;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Transactions */
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.transaction-item:hover {
+  border-color: #cbd5e1;
+  transform: translateX(4px);
+}
+
+.transaction-icon {
+  font-size: 2em;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.transaction-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.transaction-description {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 5px 0;
+  word-wrap: break-word;
+}
+
+.transaction-date {
+  font-size: 0.9em;
+  color: #64748b;
+  margin: 0;
+}
+
+.transaction-amount {
+  font-size: 1.5em;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.transaction-amount.earn {
+  color: #16a34a;
+  background: #d1fae5;
+}
+
+.transaction-amount.spend {
+  color: #dc2626;
+  background: #fee2e2;
+}
+
+/* Rewards Grid */
+.rewards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.reward-card {
+  background: #fff;
+  border: 3px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 25px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.reward-card:hover {
+  border-color: #667eea;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+}
+
+.reward-card.locked {
+  opacity: 0.6;
+  background: #f8fafc;
+}
+
+.reward-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.reward-discount {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 1.2em;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  white-space: nowrap;
+}
+
+.reward-lock {
+  font-size: 1.5em;
+}
+
+.reward-title {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+  word-wrap: break-word;
+}
+
+.reward-description {
+  font-size: 0.95em;
+  color: #64748b;
+  line-height: 1.5;
+  margin: 0 0 15px 0;
+}
+
+.reward-location {
+  font-size: 0.9em;
+  color: #667eea;
+  font-weight: 600;
+  margin-bottom: 15px;
+  word-wrap: break-word;
+}
+
+.reward-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid #e2e8f0;
+  padding-top: 15px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.reward-cost {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.cost-label {
+  font-size: 0.85em;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.cost-amount {
+  font-size: 1.3em;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.claim-button {
+  padding: 12px 24px;
+  font-size: 1em;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.claim-button.active {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+}
+
+.claim-button.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+}
+
+.claim-button.disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* My Rewards */
+.my-rewards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.my-reward-card {
+  background: #fff;
+  border: 3px solid #22c55e;
+  border-radius: 20px;
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+.my-reward-card.used {
+  border-color: #cbd5e1;
+  opacity: 0.7;
+}
+
+.my-reward-card.expired {
+  border-color: #ef4444;
+  opacity: 0.7;
+}
+
+.my-reward-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.reward-badge {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 1.1em;
+  font-weight: 800;
+}
+
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-size: 0.9em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-badge.active {
+  background: #d1fae5;
+  color: #16a34a;
+}
+
+.status-badge.used {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+.status-badge.expired {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.my-reward-title {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 10px 0;
+  word-wrap: break-word;
+}
+
+.my-reward-description {
+  font-size: 1em;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+}
+
+.my-reward-details {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.95em;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.detail-label {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.detail-value {
+  color: #1e293b;
+  font-weight: 700;
+  text-align: right;
+  word-break: break-word;
+}
+
+.show-qr-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.show-qr-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .wallet-container {
+    padding: 15px;
+  }
+
+  .wallet-title {
+    font-size: 1.8em;
+  }
+
+  .balance-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 30px 20px;
+    gap: 20px;
+  }
+
+  .balance-icon {
+    font-size: 4em;
+    animation: none; /* Disable animation on mobile for better performance */
+  }
+
+  .balance-amount {
+    font-size: 2.5em;
+  }
+
+  .tabs {
+    flex-direction: column;
+  }
+
+  .tab {
+    padding: 12px 16px;
+    font-size: 0.95em;
+  }
+
+  .tab-content {
+    padding: 25px 15px;
+  }
+
+  .section-title {
+    font-size: 1.5em;
+  }
+
+  .rewards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .transaction-item {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .transaction-amount {
+    font-size: 1.3em;
+  }
+
+  .reward-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .claim-button {
+    width: 100%;
+  }
+
+  .back-button {
+    padding: 8px 16px;
+    font-size: 0.9em;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 480px) {
+  .wallet-title {
+    font-size: 1.5em;
+  }
+
+  .balance-icon {
+    font-size: 3em;
+  }
+
+  .balance-amount {
+    font-size: 2em;
+  }
+
+  .tab {
+    font-size: 0.85em;
+    padding: 10px 12px;
+  }
+}
