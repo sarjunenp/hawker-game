@@ -131,7 +131,7 @@ hawker-game/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/hawker-game.git
+   git clone https://github.com/sarjunenp/hawker-game.git
    cd hawker-game
    ```
 

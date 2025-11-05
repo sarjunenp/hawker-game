@@ -49,7 +49,7 @@ React-based frontend for the Hawker Centre Challenge Game - an interactive platf
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/hawker-game.git
+git clone https://github.com/sarjunenp/hawker-game.git
 cd hawker-game/frontend
 ```
 
