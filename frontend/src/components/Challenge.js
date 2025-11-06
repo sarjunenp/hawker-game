@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, CircleMarker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import api from "../api";
+import Leaderboard from "./Leaderboard";
 
 export default function Challenge() {
   const navigate = useNavigate();
@@ -153,6 +154,9 @@ export default function Challenge() {
           {selectedCentre ? `🎯 Confirm: ${selectedCentre.name}` : "👆 Select a location on the map"}
         </button>
       </div>
+
+      {/* Leaderboard Section */}
+      <Leaderboard />
 
       {/* Full-Screen Result Modal */}
       {result && (

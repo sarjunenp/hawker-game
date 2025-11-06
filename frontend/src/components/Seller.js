@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import api from "../api";
+import SellerAnalytics from "./Selleranalytics";
 
 export default function Seller() {
   const [centres, setCentres] = useState([]);
@@ -287,6 +288,9 @@ export default function Seller() {
           </p>
         )}
       </div>
+
+      {/* Analytics Dashboard */}
+      <SellerAnalytics />
 
       {/* Past Challenges Section */}
       <div style={styles.challengesSection}>
