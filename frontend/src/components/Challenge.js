@@ -75,11 +75,6 @@ export default function Challenge() {
     navigate('/');
   };
 
-  const closeModal = () => {
-    setResult(null);
-    setSelectedCentre(null);
-  };
-
   if (loading) return <p style={styles.loading}>Loading current challenge...</p>;
   if (!challenge) return <p style={styles.loading}>No active challenge found.</p>;
 
@@ -162,13 +157,6 @@ export default function Challenge() {
       {result && (
         <div style={styles.modalOverlay}>
           <div style={styles.modalContent}>
-            <button 
-              onClick={closeModal}
-              style={styles.closeButton}
-            >
-              ✕
-            </button>
-
             <div style={{
               ...styles.resultCard,
               backgroundColor: result.correct ? "#d1fae5" : "#fee2e2",
@@ -367,23 +355,6 @@ const styles = {
     maxHeight: "90vh",
     overflowY: "auto",
     animation: "slideUp 0.4s ease",
-  },
-  closeButton: {
-    position: "absolute",
-    top: "-10px",
-    right: "10px",
-    background: "#fff",
-    border: "3px solid #ef4444",
-    borderRadius: "50%",
-    width: "50px",
-    height: "50px",
-    fontSize: "24px",
-    fontWeight: "bold",
-    cursor: "pointer",
-    color: "#ef4444",
-    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
-    transition: "all 0.3s ease",
-    zIndex: 1001,
   },
   resultCard: {
     padding: "40px 30px",
