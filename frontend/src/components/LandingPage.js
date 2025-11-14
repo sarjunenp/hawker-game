@@ -263,6 +263,37 @@ export default function LandingPage() {
         )}
       </div>
 
+      {/* Become a Seller Section - Only shown when logged in */}
+      {isLoggedIn && (
+        <div style={styles.sellerCard}>
+          <div style={styles.sellerIcon}>🏪</div>
+          <h2 style={styles.sellerTitle}>Are You a Hawker Seller?</h2>
+          <p style={styles.sellerDescription}>
+            Join our platform and showcase your stall to thousands of food lovers! 
+            Share your delicious offerings and attract more customers through our game.
+          </p>
+          <a 
+            href="https://forms.gle/mAMReLzto9ZKyzin9"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.sellerButton}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateY(-4px)';
+              e.target.style.boxShadow = '0 15px 40px rgba(16, 185, 129, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 10px 30px rgba(16, 185, 129, 0.4)';
+            }}
+          >
+            📝 Apply to Become a Seller
+          </a>
+          <p style={styles.sellerNote}>
+            ✨ Join our growing community of hawker vendors!
+          </p>
+        </div>
+      )}
+
       <div style={styles.features}>
         <div style={styles.feature}>
           <span style={styles.featureIcon}>🎮</span>
@@ -583,6 +614,57 @@ const styles = {
     fontSize: "1.1em",
     fontWeight: "600",
   },
+  // Seller Application Card
+  sellerCard: {
+    maxWidth: "750px",
+    margin: "0 auto 40px",
+    background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+    borderRadius: "24px",
+    padding: "40px",
+    boxShadow: "0 20px 60px rgba(16, 185, 129, 0.3)",
+    textAlign: "center",
+    color: "#fff",
+  },
+  sellerIcon: {
+    fontSize: "4em",
+    marginBottom: "20px",
+    animation: "bounce 2s infinite",
+  },
+  sellerTitle: {
+    fontSize: "2em",
+    fontWeight: "700",
+    marginBottom: "15px",
+    textShadow: "0 2px 10px rgba(0,0,0,0.2)",
+  },
+  sellerDescription: {
+    fontSize: "1.1em",
+    lineHeight: "1.7",
+    marginBottom: "30px",
+    opacity: 0.95,
+    maxWidth: "600px",
+    margin: "0 auto 30px",
+  },
+  sellerButton: {
+    display: "inline-block",
+    padding: "18px 40px",
+    fontSize: "1.3em",
+    fontWeight: "700",
+    color: "#10b981",
+    background: "#fff",
+    border: "none",
+    borderRadius: "16px",
+    cursor: "pointer",
+    boxShadow: "0 10px 30px rgba(16, 185, 129, 0.4)",
+    transition: "all 0.3s ease",
+    textDecoration: "none",
+    marginBottom: "15px",
+  },
+  sellerNote: {
+    fontSize: "1em",
+    marginTop: "15px",
+    opacity: 0.9,
+    fontStyle: "italic",
+  },
 };
 
 // Add hover effects
@@ -591,6 +673,11 @@ styleSheet.textContent = `
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
   
   .challenge-card:hover {
