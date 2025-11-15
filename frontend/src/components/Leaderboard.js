@@ -1,198 +1,326 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import api from "../api";
 
-const Leaderboard = () => {
-  // Static leaderboard data for POC
-  const leaderboardData = [
-    { rank: 1, username: 'HawkerMaster88', coins: 15420, badge: '👑' },
-    { rank: 2, username: 'FoodieExplorer', coins: 12850, badge: '🥈' },
-    { rank: 3, username: 'SGLocalChamp', coins: 10990, badge: '🥉' },
-    { rank: 4, username: 'NasiLemakFan', coins: 9560, badge: '' },
-    { rank: 5, username: 'ChickenRiceLover', coins: 8730, badge: '' },
-    { rank: 6, username: 'LaksaQueen', coins: 7420, badge: '' },
-    { rank: 7, username: 'SatayKing', coins: 6890, badge: '' },
-    { rank: 8, username: 'HokkienMeeMaster', coins: 5640, badge: '' },
-    { rank: 9, username: 'CharKwayTeowPro', coins: 4920, badge: '' },
-    { rank: 10, username: 'RotiPrataBoss', coins: 4150, badge: '' },
-  ];
+export default function Leaderboard() {
+  const [leaderboardData, setLeaderboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchLeaderboard();
+  }, []);
+
+  const fetchLeaderboard = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get("/leaderboard");
+      console.log("🏆 Leaderboard data:", response.data);
+      setLeaderboardData(response.data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching leaderboard:", err);
+      setError("Failed to load leaderboard");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div style={styles.container}>
+        <h3 style={styles.title}>🏆 Leaderboard</h3>
+        <div style={styles.loadingContainer}>
+          <p style={styles.loadingText}>Loading leaderboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !leaderboardData) {
+    return (
+      <div style={styles.container}>
+        <h3 style={styles.title}>🏆 Leaderboard</h3>
+        <div style={styles.errorContainer}>
+          <p style={styles.errorText}>Unable to load leaderboard</p>
+          <button onClick={fetchLeaderboard} style={styles.retryButton}>
+            🔄 Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { top_10, current_user } = leaderboardData;
 
   return (
-    <div style={styles.leaderboardContainer}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>🏆 Top Players Leaderboard</h2>
-        <p style={styles.subtitle}>Challenge the best hawker hunters in Singapore!</p>
+    <div style={styles.container}>
+      <h3 style={styles.title}>🏆 Leaderboard</h3>
+      <p style={styles.subtitle}>Top Players by Points</p>
+
+      {/* Top 10 List */}
+      <div style={styles.leaderboardList}>
+        {top_10.map((entry, index) => (
+          <div
+            key={index}
+            style={{
+              ...styles.leaderboardItem,
+              ...(entry.is_current_user ? styles.currentUserItem : {}),
+            }}
+          >
+            {/* Rank Badge */}
+            <div style={{
+              ...styles.rankBadge,
+              ...(index === 0 ? styles.firstPlace : {}),
+              ...(index === 1 ? styles.secondPlace : {}),
+              ...(index === 2 ? styles.thirdPlace : {}),
+              ...(entry.is_current_user ? styles.currentUserRank : {}),
+            }}>
+              {index === 0 && "🥇"}
+              {index === 1 && "🥈"}
+              {index === 2 && "🥉"}
+              {index > 2 && `#${entry.rank}`}
+            </div>
+
+            {/* Username */}
+            <div style={styles.username}>
+              {entry.is_current_user && <span style={styles.youBadge}>YOU</span>}
+              {!entry.is_current_user && entry.username}
+            </div>
+
+            {/* Points */}
+            <div style={styles.points}>
+              <span style={styles.coinIcon}>🪙</span>
+              <span style={styles.pointsValue}>{entry.points}</span>
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div style={styles.tableContainer}>
-        <table style={styles.table}>
-          <thead>
-            <tr style={styles.headerRow}>
-              <th style={{...styles.th, ...styles.rankColumn}}>Rank</th>
-              <th style={{...styles.th, ...styles.usernameColumn}}>Player</th>
-              <th style={{...styles.th, ...styles.coinsColumn}}>Coins</th>
-            </tr>
-          </thead>
-          <tbody>
-            {leaderboardData.map((player) => (
-              <tr 
-                key={player.rank} 
-                style={{
-                  ...styles.row,
-                  ...(player.rank <= 3 ? styles.topThree : {}),
-                }}
-              >
-                <td style={styles.td}>
-                  <div style={styles.rankCell}>
-                    {player.badge && <span style={styles.badge}>{player.badge}</span>}
-                    <span style={styles.rankNumber}>{player.rank}</span>
-                  </div>
-                </td>
-                <td style={{...styles.td, ...styles.usernameCell}}>
-                  <span style={styles.username}>{player.username}</span>
-                </td>
-                <td style={styles.td}>
-                  <div style={styles.coinsCell}>
-                    <span style={styles.coinIcon}>🪙</span>
-                    <span style={styles.coinAmount}>{player.coins.toLocaleString()}</span>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* Current User Position (if outside top 10) */}
+      {current_user.show_separately && (
+        <div style={styles.currentUserSection}>
+          <div style={styles.separator}>
+            <span style={styles.separatorDots}>• • •</span>
+          </div>
+          
+          <div style={{...styles.leaderboardItem, ...styles.currentUserItem}}>
+            <div style={{...styles.rankBadge, ...styles.currentUserRank}}>
+              #{current_user.rank}
+            </div>
+            
+            <div style={styles.username}>
+              <span style={styles.youBadge}>YOU</span>
+            </div>
+            
+            <div style={styles.points}>
+              <span style={styles.coinIcon}>🪙</span>
+              <span style={styles.pointsValue}>{current_user.points}</span>
+            </div>
+          </div>
 
-      <div style={styles.footer}>
-        <p style={styles.footerText}>
-          💡 Keep playing to climb the ranks and earn more coins!
-        </p>
-      </div>
+          <p style={styles.rankInfo}>
+            You're ranked #{current_user.rank} out of {current_user.total_players} players
+          </p>
+        </div>
+      )}
+
+      {/* Current User Stats (if in top 10) */}
+      {!current_user.show_separately && current_user.rank && (
+        <div style={styles.userStatsSection}>
+          <p style={styles.userStats}>
+            🎉 You're in the top 10! Ranked #{current_user.rank} with {current_user.points} points
+          </p>
+        </div>
+      )}
+
+      {/* Refresh Button */}
+      <button onClick={fetchLeaderboard} style={styles.refreshButton}>
+        🔄 Refresh Leaderboard
+      </button>
     </div>
   );
-};
+}
 
 const styles = {
-  leaderboardContainer: {
-    maxWidth: '800px',
-    margin: '40px auto',
-    padding: '30px',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    borderRadius: '20px',
-    boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: '30px',
+  container: {
+    maxWidth: "700px",
+    margin: "40px auto 20px",
+    padding: "30px",
+    background: "#fff",
+    borderRadius: "20px",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
   },
   title: {
-    fontSize: '2em',
-    fontWeight: '800',
-    color: '#fff',
-    margin: '0 0 10px 0',
-    textShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+    fontSize: "2em",
+    fontWeight: "800",
+    textAlign: "center",
+    color: "#1e293b",
+    marginBottom: "8px",
   },
   subtitle: {
-    fontSize: '1em',
-    color: 'rgba(255, 255, 255, 0.9)',
-    margin: 0,
+    fontSize: "1.1em",
+    textAlign: "center",
+    color: "#64748b",
+    marginBottom: "25px",
+    fontWeight: "500",
   },
-  tableContainer: {
-    background: '#fff',
-    borderRadius: '16px',
-    overflow: 'hidden',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+  loadingContainer: {
+    padding: "40px",
+    textAlign: "center",
   },
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse',
+  loadingText: {
+    fontSize: "1.1em",
+    color: "#64748b",
+    fontStyle: "italic",
   },
-  headerRow: {
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  errorContainer: {
+    padding: "40px",
+    textAlign: "center",
   },
-  th: {
-    padding: '18px 20px',
-    textAlign: 'left',
-    fontSize: '0.95em',
-    fontWeight: '700',
-    color: '#fff',
-    textTransform: 'uppercase',
-    letterSpacing: '0.5px',
+  errorText: {
+    fontSize: "1.1em",
+    color: "#ef4444",
+    marginBottom: "20px",
   },
-  rankColumn: {
-    width: '80px',
-    textAlign: 'center',
+  retryButton: {
+    padding: "12px 24px",
+    fontSize: "1em",
+    fontWeight: "600",
+    color: "#fff",
+    background: "#3b82f6",
+    border: "none",
+    borderRadius: "10px",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
   },
-  usernameColumn: {
-    width: 'auto',
+  leaderboardList: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "12px",
+    marginBottom: "20px",
   },
-  coinsColumn: {
-    width: '150px',
-    textAlign: 'right',
+  leaderboardItem: {
+    display: "flex",
+    alignItems: "center",
+    padding: "16px 20px",
+    background: "#f8fafc",
+    borderRadius: "12px",
+    transition: "all 0.3s ease",
+    border: "2px solid transparent",
   },
-  row: {
-    borderBottom: '1px solid #e2e8f0',
-    transition: 'all 0.3s ease',
+  currentUserItem: {
+    background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
+    border: "2px solid #f59e0b",
+    boxShadow: "0 4px 12px rgba(245, 158, 11, 0.3)",
   },
-  topThree: {
-    background: 'linear-gradient(to right, #fff9e6, #ffffff)',
+  rankBadge: {
+    minWidth: "50px",
+    height: "50px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "1.3em",
+    fontWeight: "800",
+    borderRadius: "10px",
+    background: "#e2e8f0",
+    color: "#475569",
+    marginRight: "16px",
   },
-  td: {
-    padding: '16px 20px',
-    fontSize: '1em',
-    color: '#1e293b',
+  firstPlace: {
+    background: "linear-gradient(135deg, #ffd700 0%, #ffed4e 100%)",
+    color: "#92400e",
+    boxShadow: "0 4px 12px rgba(255, 215, 0, 0.4)",
   },
-  rankCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
+  secondPlace: {
+    background: "linear-gradient(135deg, #c0c0c0 0%, #e8e8e8 100%)",
+    color: "#374151",
+    boxShadow: "0 4px 12px rgba(192, 192, 192, 0.4)",
   },
-  badge: {
-    fontSize: '1.5em',
+  thirdPlace: {
+    background: "linear-gradient(135deg, #cd7f32 0%, #e6a157 100%)",
+    color: "#451a03",
+    boxShadow: "0 4px 12px rgba(205, 127, 50, 0.4)",
   },
-  rankNumber: {
-    fontWeight: '700',
-    fontSize: '1.1em',
-    color: '#64748b',
-  },
-  usernameCell: {
-    fontWeight: '600',
+  currentUserRank: {
+    background: "#f59e0b",
+    color: "#fff",
+    boxShadow: "0 4px 12px rgba(245, 158, 11, 0.4)",
   },
   username: {
-    color: '#1e293b',
+    flex: 1,
+    fontSize: "1.15em",
+    fontWeight: "600",
+    color: "#1e293b",
   },
-  coinsCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: '8px',
+  youBadge: {
+    display: "inline-block",
+    padding: "6px 16px",
+    background: "#667eea",
+    color: "#fff",
+    borderRadius: "8px",
+    fontSize: "0.95em",
+    fontWeight: "700",
+    boxShadow: "0 2px 8px rgba(102, 126, 234, 0.3)",
+  },
+  points: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    fontSize: "1.2em",
+    fontWeight: "700",
+    color: "#1e293b",
   },
   coinIcon: {
-    fontSize: '1.3em',
+    fontSize: "1.3em",
   },
-  coinAmount: {
-    fontWeight: '700',
-    fontSize: '1.1em',
-    color: '#f59e0b',
+  pointsValue: {
+    minWidth: "60px",
+    textAlign: "right",
   },
-  footer: {
-    marginTop: '20px',
-    textAlign: 'center',
+  currentUserSection: {
+    marginTop: "30px",
   },
-  footerText: {
-    color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: '0.95em',
+  separator: {
+    textAlign: "center",
+    margin: "20px 0",
+  },
+  separatorDots: {
+    fontSize: "1.5em",
+    color: "#cbd5e1",
+    letterSpacing: "8px",
+  },
+  rankInfo: {
+    textAlign: "center",
+    marginTop: "15px",
+    fontSize: "1em",
+    color: "#64748b",
+    fontWeight: "600",
+  },
+  userStatsSection: {
+    marginTop: "20px",
+    padding: "16px",
+    background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)",
+    borderRadius: "12px",
+    border: "2px solid #3b82f6",
+  },
+  userStats: {
     margin: 0,
+    fontSize: "1.1em",
+    fontWeight: "600",
+    color: "#1e40af",
+    textAlign: "center",
+  },
+  refreshButton: {
+    width: "100%",
+    marginTop: "25px",
+    padding: "14px",
+    fontSize: "1em",
+    fontWeight: "600",
+    color: "#fff",
+    background: "#64748b",
+    border: "none",
+    borderRadius: "10px",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
   },
 };
-
-// Add hover effect with CSS-in-JS
-const styleSheet = document.createElement("style");
-styleSheet.innerText = `
-  tr:hover {
-    background-color: #f8fafc !important;
-    transform: scale(1.01);
-  }
-`;
-document.head.appendChild(styleSheet);
-
-export default Leaderboard;

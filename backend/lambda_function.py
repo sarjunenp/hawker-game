@@ -3,11 +3,10 @@ import boto3
 import random
 import uuid
 from decimal import Decimal
-import os
 from boto3.dynamodb.conditions import Attr, Key
 import traceback
 from datetime import datetime
-
+import hashlib
 
 dynamodb = boto3.resource("dynamodb")
 s3 = boto3.client("s3")
@@ -21,7 +20,7 @@ transactions_table = dynamodb.Table("hawker-game-points-transactions")
 rewards_table = dynamodb.Table("hawker-game-rewards")
 user_rewards_table = dynamodb.Table("hawker-game-user-rewards")
 
-S3_BUCKET = os.environ.get('S3_BUCKET', 'INSERT-BUCKET-NAME-HERE')
+S3_BUCKET = "hawker-game-assets-sarjune-2025"
 
 class DecimalEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -115,6 +114,35 @@ def generate_random_discount():
         "description": f"{discount}% off your next purchase at this hawker centre!"
     }
 
+def generate_anonymous_name(user_id):
+    """Generate a consistent anonymous name based on user_id hash"""
+    # List of fun Singapore-themed prefixes and suffixes
+    prefixes = [
+        "Hawker", "Laksa", "Satay", "Chilli", "Char", "Roti", 
+        "Kaya", "Bak", "Hokkien", "Nasi", "Chicken", "Prawn",
+        "Merlion", "Durian", "Kopitiam", "Tau", "Kueh", "Popiah"
+    ]
+    
+    suffixes = [
+        "Master", "King", "Queen", "Lover", "Fan", "Expert",
+        "Hero", "Chef", "Hunter", "Guru", "Ninja", "Legend",
+        "Wizard", "Pro", "Boss", "Sensei", "Champion", "Star"
+    ]
+    
+    # Create a hash of the user_id
+    hash_obj = hashlib.md5(user_id.encode())
+    hash_hex = hash_obj.hexdigest()
+    
+    # Use hash to consistently pick prefix and suffix
+    prefix_idx = int(hash_hex[:8], 16) % len(prefixes)
+    suffix_idx = int(hash_hex[8:16], 16) % len(suffixes)
+    
+    # Add a number for uniqueness
+    number = int(hash_hex[16:20], 16) % 999 + 1
+    
+    return f"{prefixes[prefix_idx]}{suffixes[suffix_idx]}{number}"
+
+
 # NEW: Points Helper Functions
 def add_points(user_id, amount, source, description):
     """Award points to a user"""
@@ -197,6 +225,9 @@ def lambda_handler(event, context):
     # NEW: Get seller's past challenges
     elif route_key == "GET /seller/challenges":
         return get_seller_challenges(event)
+    
+    elif route_key == "GET /leaderboard":
+        return handle_get_leaderboard(event)
     
     # Points & Rewards routes
     elif route_key == "POST /points/earn":
@@ -740,6 +771,75 @@ def create_presigned_upload_url(event):
     except Exception as e:
         print("❌ Error in create_presigned_upload_url:", traceback.format_exc())
         return respond(500, {"message": f"Failed to create presigned URL: {str(e)}"})
+    
+def handle_get_leaderboard(event):
+    """
+    Get leaderboard with top 10 users + current user's position
+    GET /leaderboard
+    """
+    try:
+        username, _ = get_user_info(event)
+        
+        if not username:
+            return respond(401, {"message": "User not authenticated"})
+        
+        # Scan all users and get their points, sorted by total_points
+        response = user_points_table.scan()
+        all_users = response.get('Items', [])
+        
+        # Sort by total_points descending
+        all_users.sort(key=lambda x: int(x.get('total_points', 0)), reverse=True)
+        
+        # Find current user's position
+        current_user_rank = None
+        current_user_points = 0
+        
+        for idx, user in enumerate(all_users):
+            if user['user_id'] == username:
+                current_user_rank = idx + 1
+                current_user_points = int(user.get('total_points', 0))
+                break
+        
+        # Get top 10
+        top_10 = []
+        for idx, user in enumerate(all_users[:10]):
+            user_id = user['user_id']
+            points = int(user.get('total_points', 0))
+            
+            # Check if this is the current user
+            is_current_user = (user_id == username)
+            
+            entry = {
+                'rank': idx + 1,
+                'username': 'YOU' if is_current_user else generate_anonymous_name(user_id),
+                'points': points,
+                'is_current_user': is_current_user
+            }
+            top_10.append(entry)
+        
+        # Prepare response
+        leaderboard_data = {
+            'top_10': top_10,
+            'current_user': {
+                'rank': current_user_rank,
+                'points': current_user_points,
+                'total_players': len(all_users)
+            }
+        }
+        
+        # If user is not in top 10, add their position
+        if current_user_rank and current_user_rank > 10:
+            leaderboard_data['current_user']['show_separately'] = True
+        else:
+            leaderboard_data['current_user']['show_separately'] = False
+        
+        return respond(200, leaderboard_data)
+        
+    except Exception as e:
+        print(f"❌ Error in handle_get_leaderboard: {str(e)}")
+        traceback.print_exc()
+        return respond(500, {"message": str(e)})
+
 
 def create_seller_challenge(event):
     try:

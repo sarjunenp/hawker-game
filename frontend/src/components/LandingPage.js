@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../api";
+import Leaderboard from "./Leaderboard";
 
 // Fun facts data
 const HAWKER_FACTS = [
@@ -107,7 +108,7 @@ export default function LandingPage() {
       )}
 
       <div style={styles.hero}>
-        <h1 style={styles.title}>🍜 Hawker Guesser 🎯</h1>
+        <h1 style={styles.title}>🍜 Hawker Safari 🎯</h1>
         <p style={styles.tagline}>
           Test your memory and knowledge of Singapore's iconic hawker centres!
         </p>
@@ -262,6 +263,13 @@ export default function LandingPage() {
           </>
         )}
       </div>
+
+      {/* Leaderboard Section - Only shown when logged in */}
+      {isLoggedIn && (
+        <div style={styles.leaderboardSection}>
+          <Leaderboard />
+        </div>
+      )}
 
       {/* Become a Seller Section - Only shown when logged in */}
       {isLoggedIn && (
@@ -613,6 +621,11 @@ const styles = {
   featureText: {
     fontSize: "1.1em",
     fontWeight: "600",
+  },
+  // Leaderboard Section
+  leaderboardSection: {
+    maxWidth: "750px",
+    margin: "0 auto 40px",
   },
   // Seller Application Card
   sellerCard: {
